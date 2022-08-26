@@ -13,13 +13,49 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{1fcf80c0-d3b5-4908-b165-30721f14e7fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\external_api">
+      <UniqueIdentifier>{ef9b9fe0-1ce8-4d85-b77d-383af6294271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\math">
+      <UniqueIdentifier>{3a46e830-0da7-478e-a9d5-4ade124e79da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\admirals">
+      <UniqueIdentifier>{5575dc2c-6cdd-46ac-a139-436f5e1eddaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\other">
+      <UniqueIdentifier>{c11744cb-02dc-40e7-8d24-6b8a0c4a6a53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="valor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\apis\glad\src\glad.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\external_api</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\vertex.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\Notes\Valor\openGl.txt">
+      <Filter>Source Files\other</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shader.h">
+      <Filter>Source Files\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="skMath.h">
+      <Filter>Source Files\math</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

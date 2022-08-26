@@ -1,6 +1,7 @@
 Welcome to the Valor Engine Repo!
 
-A light-weight engine based on Vulkan.
+A light-weight engine based on OpenGL. 
+(Working to Add Vulkan in future updates)
 
 For any questions feel free to ask,
 stay safe and keep on keeping on.

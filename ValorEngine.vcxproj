@@ -71,8 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\apis\glad\include;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\apis\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\apis\glad\src;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\apis\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glm-master\glm;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glfw-3.3.8.bin.WIN64\include;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glm-master\glm;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glfw-3.3.8.bin.WIN64\include;C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glad\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\val74\SynologyDrive\Dev\Projects\Valor\ValorEngine\libs\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;kernel32.lib;shell32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,11 +134,23 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;user32.lib;gdi32.lib;kernel32.lib;shell32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\apis\glad\src\glad.c" />
     <ClCompile Include="valor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\Notes\Valor\openGl.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.fs" />
+    <None Include="shaders\vertex.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="skMath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
