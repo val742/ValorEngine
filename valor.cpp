@@ -42,9 +42,6 @@ float lastX = 800.0f / 2.0;
 float lastY = 600.0 / 2.0;
 float fov = 45.0f;
 
-
-
-
 // Timelord
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -115,6 +112,7 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 	// Create the window w/ failsafe
 	GLFWwindow* gameWindow1 = glfwCreateWindow(windowWidth, windowHeight, "Valor Engine", NULL, NULL);
 	if (gameWindow1 == NULL) {
@@ -127,6 +125,8 @@ int main()
 	glfwSetFramebufferSizeCallback(gameWindow1, framebuffer_size_callback);
 	glfwSetCursorPosCallback(gameWindow1, mouse_callback);
 	glfwSetScrollCallback(gameWindow1, scroll_callback);
+
+	glfwSetInputMode(gameWindow1, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	//End section
 	// Setup Glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -137,8 +137,6 @@ int main()
 	// end glad block
 	// 
 	glEnable(GL_DEPTH_TEST);
-        return -1;
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT); 
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	Shader shaderProg("shaders/vertex.vs", "shaders/fragment.fs");
@@ -172,6 +170,61 @@ int main()
 	// End VBO Section
 	
 
+	unsigned int texture1, texture2;
+	// texture 1
+	// ---------
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	unsigned char* data = stbi_load("assets/container.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	// texture 2
+	// ---------
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image, create texture and generate mipmaps
+	data = stbi_load("assets/awesomeface.png", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		// note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// -------------------------------------------------------------------------------------------
+	shaderProg.use();
+	shaderProg.setInt("texture1", 0);
+	shaderProg.setInt("texture2", 1);
+
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	// Start Game Loop
 	while (!glfwWindowShouldClose(gameWindow1))
@@ -199,10 +252,9 @@ int main()
 		// draw a triangle
 		shaderProg.use();
 
-		// Transformation 
 		glm::mat4 projection = glm::perspective(glm::radians(fov), (float)windowWidth / (float)windowHeight, 0.1f, 100.0f);
 		shaderProg.setMat4("projection", projection);
-        -0.5f, -0.5f, 0.0f,
+
 		// camera/view transformation
 		glm::mat4 view = glm::lookAt(cPos, cPos + cFront, cUp);
 		shaderProg.setMat4("view", view);
@@ -233,73 +285,11 @@ int main()
 
 	glfwTerminate();
 	return 0;
-    };
+};
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-// process user input
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesStar), verticesStar, GL_STATIC_DRAW);
-
-    
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesStar), indicesStar, GL_STATIC_DRAW);
 
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);// Referenced in glVertexAttribPointer; data stored in floating point values
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    
-    glBindVertexArray(0);
-
-    
-    // Render loop
-    while (!glfwWindowShouldClose(window)) {
-        // input
-        processInput(window);
-
-        // render 
-        // --------------
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
-        // drawingTriangle
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        // glDrawArrays(GL_TRIANGLES, 0, 6);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 3 * 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
-
-        // check and call events and swap the buffers
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    };
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
-    glfwTerminate();
-    return 0;
-
-};
-
-
-// glfw: updates size when window is updated 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-};
 
 // process all input
 void processInput(GLFWwindow* window)
